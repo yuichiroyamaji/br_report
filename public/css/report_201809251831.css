@@ -1,0 +1,168 @@
+
+nav{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10000;
+    background-color: #eee;
+    opacity: 0.8;
+    line-height: 3em;
+    padding: 5px 5px 0 5px;
+}
+.remained_cash{
+	color: red;
+	font-size: 2em;
+	/*font-weight: bold;*/
+}
+.text-danger{
+	color: red;
+}
+main{
+	margin-top: 5em;
+}
+section{
+	background-color: #eee;
+	margin: 20px 0;
+}
+input[type=number]{
+	text-align: right;
+	font-size: 1.2em;
+  	/*transform: scale(0.5);*/
+}
+input[type=submit] {
+	line-height: 1.2em;
+	padding: 8px;
+	background-color: #fff;
+	border-radius: 5px;
+	font-size: 1em;
+	margin-left: 20px;
+}
+select{
+	border :1px solid #eee;
+	font-size: 16px;
+}
+.section_title{
+	background-color: #999;
+	color: #fff;
+	font-weight: bold;
+	padding: 5px;
+}
+.inner_section{
+	padding: 20px;
+}
+.md_sec_title{
+	background-color: #bfbfbf;
+	color: #fff;
+	margin: 10px 0;
+	padding: 5px;
+}
+.float{
+	width: auto;
+	margin: 0;
+}
+.left{
+	float: left;
+	font-weight: bold;
+}
+.right{
+	float: right;
+	color: #000;
+}
+#date select{
+	border: 1px solid #ccc;
+}
+nav select{
+	-webkit-appearance: none;/* ベンダープレフィックス(Google Chrome、Safari用) */
+	-moz-appearance: none;	/* ベンダープレフィックス(Firefox用) */
+	appearance: none;		/* 標準のスタイルを無効にする */ 
+	background-color: #eee;
+	text-align: center;
+}
+.resizing_select {
+ width: min-width;
+} 
+ 
+#width_tmp_select{
+ display : none;
+} 
+.md_sec_title:after {
+    content:"";
+    display:block;
+    overflow:hidden;
+} 
+.md_sec_title:after {
+    clear:both;
+}
+.select_height{
+	height: 2em;
+}
+.sm_sec_title{
+	background-color: #ffbf7f;
+	color: #fff;
+	/*width: 90%;*/
+	border-radius: 10px;
+	margin: 10px 0;
+	padding: 5px;
+}
+.breakdown{
+	text-align: right;
+}
+.sm_sm_sec_title{
+	background-color: #ffbf7f;
+	color: #fff;
+	width: 50%;
+	border-radius: 10px;
+	margin: 10px 0;
+	padding: 5px;
+	display: inline-block;
+}
+.form_input{
+	text-align: right;
+}
+/*.money{
+	width: 6em;
+}*/
+.time{
+	width: 3em;
+}
+.no_guest{
+	vertical-align: middle;
+}
+input[type=checkbox] {
+	transform: scale(2);
+	margin: 0 15px;
+}
+label{
+	background-color: yellow;
+}
+textarea{
+	width: 100%;
+	font-size: 16px;
+}
+.subtotal{
+	font-size: 1.2em;
+}
+.total_sales, .total_pay{
+	font-size: 1.5em;
+	color: blue;
+}
+/*.staff_section{
+	padding: 5px;
+	background-color: #eee;
+}*/
+.additional_section{
+	margin-top: 30px;
+}
+
+@media (max-width: 767px) {
+	section{
+		margin: 5% 0;
+	}
+	.section_title{
+		/*line-height: 2em;*/
+		padding: 2%;
+	}
+	.inner_section{
+		padding: 3%;
+	}
+}
