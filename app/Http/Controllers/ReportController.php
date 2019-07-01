@@ -22,7 +22,7 @@ class ReportController extends Controller
     	// 	$users = DB::table('users')->orderBy('id')->select('name')->get();
     	// 	return $users;
     	// });
-        $day = ['日', '月', '火', '水', '木', '金', '土'];
+        $days = Constances::$days;
         $year = date('Y' , strtotime('-18 hour'));
         $month = date('n' , strtotime('-18 hour'));
         $date = date('d' , strtotime('-18 hour'));
@@ -30,7 +30,7 @@ class ReportController extends Controller
     		'year' => $year,
     		'month' => $month,
     		'date' => $date,
-            'day' => $day[date('w')]
+            'day' => $days[date('w')]
     	];
     	// $users = DB::table('users')->orderBy('id')->select('name')->get();
     	// $expenses = [
@@ -150,7 +150,7 @@ class ReportController extends Controller
         $msg_html = explode(',', $msg_html);
         $days = Constances::$days;
 		$week = date("w",mktime(0,0,0,$month,$date,$year));
-        $dates = $year.'年'.$month.'月'.$date.'日('.$day[$week].')';
+        $dates = $year.'年'.$month.'月'.$date.'日('.$days[$week].')';
 
         $to      = 'Y.071081010622@icloud.com';
         // $to      = 'yuichiroyamaji@hotmail.com';
