@@ -148,7 +148,7 @@ class ReportController extends Controller
             $msg_html .= '['.$key.'] '.$value.",";
         }
         $msg_html = explode(',', $msg_html);
-        $day = ['日', '月', '火', '水', '木', '金', '土'];
+        $days = Constances::$days;
 		$week = date("w",mktime(0,0,0,$month,$date,$year));
         $dates = $year.'年'.$month.'月'.$date.'日('.$day[$week].')';
 

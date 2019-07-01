@@ -3,9 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Report;
+use Carbon\Carbon;
+use App\Items\Constances;
 
 class Report extends Model
 {
+    protected $table = 'reports';
+
     protected $fillable = [
     	'id',
 		'date',
@@ -77,4 +82,49 @@ class Report extends Model
 		'updated_at',
 		'deleted_at'
     ];
+
+    public static function existCheck($date){
+
+    }
+
+    public static function updateReport($date){
+    	
+    }
+
+    public static function insertReport($date){
+    	
+    }
+
+    public static function missingReport($term){
+    	$today = Carbon::today();
+    	$start_date = self::setStartDate($term);
+    	while(true){
+    		$dates[] = $start_date->format('Y-m-d');
+    		if($start_date == $today){break;}
+    		$start_date = $start_date->addDay();
+    	}
+    	$start_date = self::setStartDate($term);
+    	$result = self::where([    		
+    		['date', '>=', $start_date],
+    		['delete_flg', 0]
+    	])->select('date')->get();    	
+    	$reported_dates = $result->pluck('date')->toArray();
+    	$arr_diffs = array_diff($dates, $reported_dates);
+    	$days = Constances::$days;
+    	foreach($arr_diffs as $arr_diff){
+    		$dt = Carbon::parse($arr_diff);
+    		$day = $dt->dayOfWeek;
+    		$diffs[] = $arr_diff.'('.$days[$day].')';
+    	}
+    	return $diffs;
+    }
+
+    public static function setStartDate($term){
+    	if($term == 'week'){
+    		$start_date = Carbon::today()->subWeek();
+    	}else{
+    		$start_date = Carbon::today()->subMonth();
+    	}
+    	return $start_date;
+    }
 }

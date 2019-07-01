@@ -22,3 +22,5 @@ Route::get('/report', 'ReportController@showReportPage');
 Route::redirect('/report/register', '/laravel/public/report');
 Route::post('/report/register', 'ReportController@registerRequest');
 Route::get('/report/complete', 'ReportController@showCompletePage');
+
+Route::get('/test', 'testController@handle');

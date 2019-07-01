@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\MonthlyReport::class
     ];
 
     /**
@@ -26,6 +26,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        // withoutOverlappingをつけることで多重実行を防ぐので必須
+        $schedule->command('command:monthlyreport')->withoutOverlapping()->monthlyOn('1', '09:00');
+        // $schedule->command('command:missingreport')->withoutOverlapping()->mondays('09:00');
+        $schedule->command('command:missingreport')->withoutOverlapping()->at('21:26');
     }
 
     /**
