@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         // withoutOverlappingをつけることで多重実行を防ぐので必須
         $schedule->command('command:monthlyreport')->withoutOverlapping()->monthlyOn('1', '09:00');
         // $schedule->command('command:missingreport')->withoutOverlapping()->mondays('09:00');
-        $schedule->command('command:missingreport')->withoutOverlapping()->at('21:26');
+        $schedule->command('command:missingreport')->withoutOverlapping()->at('10:03');
     }
 
     /**

@@ -5,7 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Report;
 use Carbon\Carbon;
-use App\Items\Constances;
+use App\Services\DayService;
+use Log;
 
 class Report extends Model
 {
@@ -95,36 +96,30 @@ class Report extends Model
     	
     }
 
-    public static function missingReport($term){
-    	$today = Carbon::today();
-    	$start_date = self::setStartDate($term);
+    public static function missingReport($from_date, $to_date){
+    	$start_date = clone $from_date;
+    	$end_date = clone $to_date;
+    	if($start_date >= $end_date){
+    		Log::error('[ERROR] start_date is equal or greater than end_date');
+    		return false;
+    	}
     	while(true){
     		$dates[] = $start_date->format('Y-m-d');
-    		if($start_date == $today){break;}
+    		if($start_date == $end_date){break;}
     		$start_date = $start_date->addDay();
     	}
-    	$start_date = self::setStartDate($term);
-    	$result = self::where([    		
-    		['date', '>=', $start_date],
+    	$reported_dates = self::where([    		
+    		['date', '>=', $from_date->format('Y-m-d')],   		
+    		['date', '<=', $to_date->format('Y-m-d')],
     		['delete_flg', 0]
-    	])->select('date')->get();    	
-    	$reported_dates = $result->pluck('date')->toArray();
+    	])->select('date')->pluck('date')->toArray();
     	$arr_diffs = array_diff($dates, $reported_dates);
-    	$days = Constances::$days;
+    	$days = DayService::$days;
     	foreach($arr_diffs as $arr_diff){
     		$dt = Carbon::parse($arr_diff);
     		$day = $dt->dayOfWeek;
     		$diffs[] = $arr_diff.'('.$days[$day].')';
     	}
     	return $diffs;
-    }
-
-    public static function setStartDate($term){
-    	if($term == 'week'){
-    		$start_date = Carbon::today()->subWeek();
-    	}else{
-    		$start_date = Carbon::today()->subMonth();
-    	}
-    	return $start_date;
     }
 }

@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Services\EmailSendService;
 use App\Report;
+use App\Items\Constances;
+use App\User;
+use App\Services\DayService;
+use Carbon\Carbon;
 
 class MissingReport extends Command
 {
@@ -49,27 +53,40 @@ class MissingReport extends Command
      */
     public function handle()
     {
-        $missed_reports = Report::missingReport('month');
-        // Log::info($missed_reports);
-        $day = Constances::$days;
-        $week = date("w",mktime(0,0,0,$month,$date,$year));
-        $dates = $year.'年'.$month.'月'.$date.'日('.$day[$week].')';
-        $subject = '【'.$report_type.'報告】'.$dates;
-        $message = '------------------------------'."\r\n";
-        $message .= $year.'年'.$month.'月度実績'."\r\n";
-        $message .= '------------------------------'."\r\n";
-        $message .= '総売上げ額： '.$total_sales.'円'."\r\n";
-        $message .= '総純利益額： '.$net_sales.'円'."\r\n";
-        $message .= '(総カード売上： '.$credit_sales.'円)'."\r\n";
-        $message .= '(総人件費： '.$total_labor_cost.'円)'."\r\n";
-        $message .= '(総経費： '.$total_expense_cost.'円)'."\r\n";
-        $message .= "\r\n";
-        $message .= '------------------------------'."\r\n";
-        $message .= $report_type.'報告内容'."\r\n";
-        $message .= '------------------------------'."\r\n";
-        $message .= $message."\r\n";
-        
-        $result = $this->emailSendService->send($subject, $message);
-        Log::info($result);
+        Log::info('レポート未提出日送信開始');
+        try{
+            $users = User::getAllUsers();
+            $to = $users->where('name', 'yoshie')->pluck('email')->first();
+            // $bcc = $users->where('name', 'yuichiro')->pluck('email')->first();
+            $days = DayService::$days;
+            $day_ago = DayService::setDate('day');
+            $week_ago = DayService::setDate('week');
+            $week_day_ago = clone $week_ago;
+            $week_day_ago = $week_day_ago->subDay();
+            $month_ago = DayService::setDate('month');
+            $term_week = $week_ago->format('Y/m/d').'('.$days[$week_ago->dayOfWeek].')～'.$day_ago->format('Y/m/d').'('.$days[$day_ago->dayOfWeek].')';
+            $term_month = $month_ago->format('Y/m/d').'('.$days[$month_ago->dayOfWeek].')～'.$week_day_ago->format('Y/m/d').'('.$days[$week_day_ago->dayOfWeek].')';
+            $subject = 'レポート未提出日 ['.$term_week.']';
+            $message = "\r\n";
+            $message .= '-------------------------------------'."\r\n";
+            $message .= '先週分['.$term_week."]\r\n";
+            $message .= '-------------------------------------'."\r\n";
+            $missed_reports_week = Report::missingReport($week_ago, $day_ago);
+            foreach($missed_reports_week as $report){
+                $message .= $report."\r\n";
+            }
+            $message .= "\r\n";
+            $message .= '-----------------------------------------'."\r\n";
+            $message .= '過去30日分['.$term_month."]\r\n";
+            $message .= '-----------------------------------------'."\r\n";
+            $missed_reports_month = Report::missingReport($month_ago, $week_day_ago);
+            foreach($missed_reports_month as $report){
+                $message .= $report."\r\n";
+            }
+            $result = $this->emailSendService->send($to, $subject, $message);            
+        }catch(Exception $e){
+            Log::error('レポート未提出日送信エラー: '.$e);
+        }
+        Log::info('レポート未提出日送信完了');
     }
 }
