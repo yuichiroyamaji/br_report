@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Services\EmailSendService;
 use App\Report;
-use App\Items\Constances;
 use App\User;
 use App\Services\DayService;
 use Carbon\Carbon;
@@ -55,9 +54,10 @@ class MissingReport extends Command
     {
         Log::info('レポート未提出日送信開始');
         try{
-            $users = User::getAllUsers();
-            $to = $users->where('name', 'yoshie')->pluck('email')->first();
-            // $bcc = $users->where('name', 'yuichiro')->pluck('email')->first();
+            // $users = User::getAllUsers();
+            // $to = $users->where('name', 'yoshie')->pluck('email')->first();
+            // $to = $users->where('name', 'yuichiro')->pluck('email')->first();
+            $to = 'Y.071081010622@icloud.com';
             $days = DayService::$days;
             $day_ago = DayService::setDate('day');
             $week_ago = DayService::setDate('week');
@@ -66,19 +66,20 @@ class MissingReport extends Command
             $month_ago = DayService::setDate('month');
             $term_week = $week_ago->format('Y/m/d').'('.$days[$week_ago->dayOfWeek].')～'.$day_ago->format('Y/m/d').'('.$days[$day_ago->dayOfWeek].')';
             $term_month = $month_ago->format('Y/m/d').'('.$days[$month_ago->dayOfWeek].')～'.$week_day_ago->format('Y/m/d').'('.$days[$week_day_ago->dayOfWeek].')';
-            $subject = 'レポート未提出日 ['.$term_week.']';
-            $message = "\r\n";
-            $message .= '-------------------------------------'."\r\n";
-            $message .= '先週分['.$term_week."]\r\n";
-            $message .= '-------------------------------------'."\r\n";
+            $subject = '【レポート未提出日報告】 '.$term_week;
+            $message = '----------------------------------'."\r\n";
+            $message .= '▼先週分'."\r\n";
+            $message .= $term_week."\r\n";
+            $message .= '----------------------------------'."\r\n";
             $missed_reports_week = Report::missingReport($week_ago, $day_ago);
             foreach($missed_reports_week as $report){
                 $message .= $report."\r\n";
             }
             $message .= "\r\n";
-            $message .= '-----------------------------------------'."\r\n";
-            $message .= '過去30日分['.$term_month."]\r\n";
-            $message .= '-----------------------------------------'."\r\n";
+            $message .= '----------------------------------'."\r\n";
+            $message .= '▼過去30日分'."\r\n";
+            $message .= $term_month."\r\n";
+            $message .= '----------------------------------'."\r\n";
             $missed_reports_month = Report::missingReport($month_ago, $week_day_ago);
             foreach($missed_reports_month as $report){
                 $message .= $report."\r\n";

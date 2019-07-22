@@ -6,9 +6,9 @@ $(function(){
     note = note + '　スタッフに「ことみ」と「ロキ」\n';
     note = note + '　が追加されました';
     //alert(note);
-    // var dates = '<?php $dates ?>';
-    var dates = 'jafhda';
-    alert(dates);
+    var dates = @json($dates);
+    console.log(dates);
+    alert(dates[0]);
 
     //****************************共通関数****************************
 
@@ -286,9 +286,10 @@ $(function(){
             contents = '',
             target_section = '.' + num + '_staff_section',
             reg_hours_rate = $('.reg_hours_rate:first').text(),
+            staffs = $('[name=01_staff]').val();
         contents = contents + '<div class="md_sec_title staff"><p class="float left">スタッフ_' + num + '</p>';
         contents = contents + '<p class="float right"><select class="select_height" name="' + num + '_staff">';
-        contents = contents + '<option>美咲</option><option>イリヤ</option><option>カナ</option><option>柘榴</option><option>カーマ</option><option>ののか</option><option>ことみ</option><option>ヒメ</option><option>弓月</option><option>ロキ</option>';
+        contents = contents + staffs;
         contents = contents + '</select></p></div>';
         contents = contents + '<p class="sm_sec_title">総給与額</p>';
         contents = contents + '<p class="form_input">';

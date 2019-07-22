@@ -6,9 +6,6 @@ $(function(){
     note = note + '　スタッフに「ことみ」と「ロキ」\n';
     note = note + '　が追加されました';
     //alert(note);
-    // var dates = '<?php $dates ?>';
-    var dates = 'jafhda';
-    alert(dates);
 
     //****************************共通関数****************************
 
@@ -288,7 +285,7 @@ $(function(){
             reg_hours_rate = $('.reg_hours_rate:first').text(),
         contents = contents + '<div class="md_sec_title staff"><p class="float left">スタッフ_' + num + '</p>';
         contents = contents + '<p class="float right"><select class="select_height" name="' + num + '_staff">';
-        contents = contents + '<option>美咲</option><option>イリヤ</option><option>カナ</option><option>柘榴</option><option>カーマ</option><option>ののか</option><option>ことみ</option><option>ヒメ</option><option>弓月</option><option>ロキ</option>';
+        contents = contents + staffs;
         contents = contents + '</select></p></div>';
         contents = contents + '<p class="sm_sec_title">総給与額</p>';
         contents = contents + '<p class="form_input">';
@@ -328,7 +325,7 @@ $(function(){
             target_section = '.' + num + '_expense_section',
         contents = contents + '<div class="md_sec_title expense"><p class="float left">経費_' + num + '</p>';
         contents = contents + '<p class="float right"><select class="select_height" name="' + num + '_expense">';
-        contents = contents + '<option>酒屋</option><option>おしぼり</option><option>NAC</option><option>代引き</option><option>雑費</option>';
+        contents = contents + expense_types;
         contents = contents + '</select></p></div>';
         contents = contents + '<p class="sm_sec_title">支払い額</p>';
         contents = contents + '<p class="form_input"><input type="number" name="' + num + '_expense_pay" class="money count minus expense_pay" value="">&nbsp円</p>';

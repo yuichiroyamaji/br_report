@@ -7,6 +7,7 @@ use App\Report;
 use Carbon\Carbon;
 use App\Services\DayService;
 use Log;
+use DB;
 
 class Report extends Model
 {
@@ -84,25 +85,28 @@ class Report extends Model
 		'deleted_at'
     ];
 
-    public static function existCheck($date){
-
+    public static function deletePastReport($date){
+    	$where = [['date', $date], ['expense_flg', '<>', 1]];
+    	if(self::where($where)->get()->isNotEmpty()){
+    		self::where($where)->update(['delete_flg' => 1, 'deleted_at' => Carbon::now()]);
+    	}
     }
 
-    public static function updateReport($date){
-    	
+    public static function scopeColumns(){
+    	return DB::table('information_schema.columns')->where('TABLE_NAME', 'reports')->get();
     }
 
-    public static function insertReport($date){
-    	
+	public static function getThisMonthRecord($year, $month){
+    	return self::whereYear('date', $year)->whereMonth('date', $month)->where('delete_flg', 0)->get();
+    }
+
+    public static function insertReport($input){
+    	self::insert($input);
     }
 
     public static function missingReport($from_date, $to_date){
     	$start_date = clone $from_date;
     	$end_date = clone $to_date;
-    	if($start_date >= $end_date){
-    		Log::error('[ERROR] start_date is equal or greater than end_date');
-    		return false;
-    	}
     	while(true){
     		$dates[] = $start_date->format('Y-m-d');
     		if($start_date == $end_date){break;}

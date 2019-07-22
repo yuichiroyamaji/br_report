@@ -18,9 +18,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/report', 'ReportController@showReportPage');
-Route::redirect('/report/register', '/laravel/public/report');
-Route::post('/report/register', 'ReportController@registerRequest');
-Route::get('/report/complete', 'ReportController@showCompletePage');
+Route::get('/report', 'ReportController@index')->name('report');
+Route::get('/shift', 'ShiftController@index')->name('shift');
+Route::redirect('/report/send', 'ReportController@back');
+Route::post('/report/send', 'ReportController@send');
+Route::get('/report/complete', 'ReportController@complete');
 
 Route::get('/test', 'testController@handle');

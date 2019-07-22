@@ -15,6 +15,8 @@ class User extends Authenticatable
      *
      * @var array
      */
+    protected $table = 'users';
+
     protected $fillable = [
         'name', 'email', 'password',
     ];
@@ -30,5 +32,16 @@ class User extends Authenticatable
 
     public static function scopeGetAllUsers(){
         return DB::table('users')->get();
+    }
+
+    public static function scopeGetExceptSysAdmin(){
+        return self::where('name', '<>', 'システム管理者')->get()->pluck('name');
+    }
+
+    public static function scopeGetEmailAddress($name){
+        $email = self::where('name', $name)->get()->pluck('email');
+        echo $email;
+        exit;
+        return $email[0];
     }
 }
