@@ -8,6 +8,7 @@
 	<!--CSS -->
 	<link rel="stylesheet" href="./css/bootstrap.min.css" />
 	<!--自作CSS -->
+	<link rel="stylesheet" href="./css/common.css" />
 	<link rel="stylesheet" href="./css/report_201809251831.css" />
 	<!--JS -->
 	<script src="./js/jquery.js"></script>

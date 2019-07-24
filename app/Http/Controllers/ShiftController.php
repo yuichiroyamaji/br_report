@@ -19,6 +19,9 @@ class ShiftController extends Controller
     	$today = Carbon::today()->day > 20 ? Carbon::today()->addMonth()->endOfMonth() : Carbon::today()->endOfMonth();
     	// 配列化
     	$dates = DayService::separeteDate($today);
+    	// forfor($i = 1; $i <= $today->day; $i++){
+    		
+    	// }
     	return view('contents.shift.shift')->with([
             'dates' => $dates,
             'staffs' => User::getExceptSysAdmin(),

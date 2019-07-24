@@ -8,7 +8,8 @@
 	<!--CSS -->
 	<link rel="stylesheet" href="./css/bootstrap.min.css" />
 	<!--自作CSS -->
-	<link rel="stylesheet" href="./css/report_201809251831.css" />
+	<link rel="stylesheet" href="./css/common.css" />
+	<link rel="stylesheet" href="./css/shift.css" />
 	<!--JS -->
 	<script src="./js/jquery.js"></script>
 	<script src="./js/jquery.color.js"></script>
@@ -48,20 +49,22 @@
 					@endif
 				@endfor
 			</select> 月度
-			<select id="width_tmp_select">
-				<option id="width_tmp_option"></option>
-			</select>
 		</p>
 		<input type="submit" value="表示切替">
-		<!-- <p class="float right"><span class="text-danger">残金：</span><span class="remained_cash count" data-num="100">0</span><span class="text-danger">&nbsp円</span></p> -->
-		<input type="hidden" name="date" value="">
-		<input type="hidden" name="remained_cash">
 	</nav>
 	<div class="container">
 	<main>
 		<section>
 			<div class="section_title">{{$dates['year']}} 年 {{$dates['month']}} 月度シフト</div>
 			<div class="inner_section">
+				<table class='table table-bordered table-responsive'>
+					<tr><th>日付</th><th>出勤</th><th>イベント</th></tr>
+					@for($i = 1; $i <= $dates['date']; $i++)
+						<tr><td>{{$dates['year']}}/{{$dates['month']}}/{{$i}}</td><td></td><td><input type="text"></td></tr>
+					@endfor
+				</table>
+				
+				{!! Form::select('category', ['犬', '猫', '猿'], null, ['class' => 'form-control']) !!}
 				<!-- <p class="sm_sec_title">今日の売上げ総額</p>
 					<p class="form_input">
 						<span id="total_sales" class="total_sales" >0</span>&nbsp円

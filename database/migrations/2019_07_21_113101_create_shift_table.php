@@ -21,11 +21,11 @@ class CreateShiftTable extends Migration
             $table->string('03_staff', 20)->comment('スタッフ_03')->nullable();
             $table->string('04_staff', 20)->comment('スタッフ_04')->nullable();
             $table->string('05_staff', 20)->comment('スタッフ_05')->nullable();
-            $table->boolean('event_flg')->comment('イベントフラグ')->default(0);
-            $table->string('event_title', 255)->comment('イベントタイトル')->nullable();
+            $table->string('event', 255)->comment('イベント')->nullable();
             $table->boolean('dayoff_flg')->comment('休みフラグ')->default(0);
             $table->boolean('delete_flg')->comment('削除フラグ')->default(0);
             $table->timestamp('deleted_at')->comment('削除日時')->nullable();
+            // timestamps()でcreated_atとupdated_atが作成される
             $table->timestamps();
         });
     }

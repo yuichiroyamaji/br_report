@@ -13,8 +13,9 @@ class Shift extends Model
 {
     const TABLENAME = 'shifts';
     protected $table = self::TABLENAME;
-
     
-
+    public static function getShift($date){
+    	return self::whereYear('date', $date->year)->whereMonth('date', $date->month)->where('delete_flg', 0)->get();
+    }
 
 }
