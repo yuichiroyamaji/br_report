@@ -15,8 +15,12 @@ use App\Items\Constances;
 class ShiftController extends Controller
 {
     public function index(){
+    	// 20日以降の場合は翌月分のシフトを表示させるため月を繰り上げ。日付は今日の日にちではなく対象月の最終日を渡す
+    	$today = Carbon::today()->day > 20 ? Carbon::today()->addMonth()->endOfMonth() : Carbon::today()->endOfMonth();
+    	// 配列化
+    	$dates = DayService::separeteDate($today);
     	return view('contents.shift.shift')->with([
-            'dates' => DayService::separeteDate(Carbon::now()->subHour(16)),
+            'dates' => $dates,
             'staffs' => User::getExceptSysAdmin(),
             'expense_types' => Constances::EXPENSE_TYPE
         ]);

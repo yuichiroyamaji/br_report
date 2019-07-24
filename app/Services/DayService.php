@@ -27,4 +27,13 @@ class DayService{
         }
         return $date;
     }
+
+    public static function getDayCount($month){
+        $dates = [
+            'year' => $today->year,
+            'month' => $today->month,
+            'date' => $today->day
+        ];
+        return $dates; 
+    }
 }
