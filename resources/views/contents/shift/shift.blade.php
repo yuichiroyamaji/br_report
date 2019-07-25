@@ -64,7 +64,7 @@
 					@endfor
 				</table>
 				
-				{!! Form::select('category', ['犬', '猫', '猿'], null, ['class' => 'form-control']) !!}
+				{!! Form::select('category', 'staffs', null, ['class' => 'form-control']) !!}
 				<!-- <p class="sm_sec_title">今日の売上げ総額</p>
 					<p class="form_input">
 						<span id="total_sales" class="total_sales" >0</span>&nbsp円
