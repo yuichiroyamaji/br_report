@@ -1,28 +1,18 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>シフト設定</title>
-	<!--CSS -->
-	<link rel="stylesheet" href="./css/bootstrap.min.css" />
-	<!--自作CSS -->
-	<link rel="stylesheet" href="./css/common.css" />
-	<link rel="stylesheet" href="./css/shift.css" />
-	<!--JS -->
-	<script src="./js/jquery.js"></script>
-	<script src="./js/jquery.color.js"></script>
-	<script src="./js/bootstrap.min.js"></script>
-	<!--自作JS -->
-    <script type="text/javascript">
-    	// laravelの変数をJSに渡す
-    	var staffs = @json($staffs);
-    	var expense_types = @json($expense_types);
+
+@extends('layouts.back.common')
+@section('title', 'シフト設定')
+@section('css')
+	<link rel="stylesheet" href="{{ url('assets/back/css/shift.css') }}" />
+@endsection
+@section('js')
+	<script type="text/javascript">
+		// laravelの変数をJSに渡す
+		var staffs = @json($staffs);
+		var expense_types = @json($expense_types);
 	</script>
-    <script src="./js/report_201812272025.js"></script>
-</head>
-<body>
+	<script src="./js/report_201812272025.js"></script>
+@endsection
+@section('content')
 	@env('production')
 	<form method="POST" action="/laravel/shift/send">
 	@else
@@ -63,8 +53,8 @@
 						<tr><td>{{$dates['year']}}/{{$dates['month']}}/{{$i}}</td><td></td><td><input type="text"></td></tr>
 					@endfor
 				</table>
+				{!! Form::select('category[]', ['犬', '猫', '猿'], null, ['class' => 'form-control js-multiple', 'multiple' => 'multiple']) !!}
 				
-				{!! Form::select('category', 'staffs', null, ['class' => 'form-control']) !!}
 				<!-- <p class="sm_sec_title">今日の売上げ総額</p>
 					<p class="form_input">
 						<span id="total_sales" class="total_sales" >0</span>&nbsp円
@@ -79,5 +69,4 @@
 	</main>
 	</form>
 </div>
-</body>
-</html>
+@endsection

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Front;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Log;
@@ -19,7 +20,7 @@ class ReportController extends Controller
         $option_staffs = self::optionize($staffs);
         $expense_types = Constances::EXPENSE_TYPE;
         $option_expense_types = self::optionize($expense_types);
-    	return view('contents.report.report')->with([
+    	return view('contents.front.report.report')->with([
             'dates' => DayService::separeteDate(Carbon::now()->subHour(16)),
             'staffs' => $option_staffs,
             'expense_types' => $option_expense_types
@@ -35,7 +36,7 @@ class ReportController extends Controller
     }
 
     public function back(){
-        redirect('report');
+        redirect('front.report');
     }
 
     public function send(Request $request){  
@@ -144,7 +145,7 @@ class ReportController extends Controller
     }
 
     public function complete(Request $request){
-        return view('contents.report.complete')->with([
+        return view('contents.front.report.complete')->with([
                                                     'dates' => $request->old('dates'),
                                                     'msg' => $request->old('msg')
                                                 ]);

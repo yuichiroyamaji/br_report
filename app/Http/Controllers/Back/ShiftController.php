@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Back;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Log;
@@ -22,7 +23,7 @@ class ShiftController extends Controller
     	// forfor($i = 1; $i <= $today->day; $i++){
     		
     	// }
-    	return view('contents.shift.shift')->with([
+    	return view('contents.back.shift.shift')->with([
             'dates' => $dates,
             'staffs' => User::getExceptSysAdmin(),
             'expense_types' => Constances::EXPENSE_TYPE

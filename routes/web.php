@@ -11,17 +11,24 @@
 |
 */
 
+//オリジナル
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/report', 'ReportController@index')->name('report');
-Route::get('/shift', 'ShiftController@index')->name('shift');
-Route::redirect('/report/send', 'ReportController@back');
-Route::post('/report/send', 'ReportController@send');
-Route::get('/report/complete', 'ReportController@complete');
+//フロント画面
+Route::namespace('Front')->as('front.')->group(function() {
+    Route::get('/report', 'ReportController@index')->name('report');
+    Route::redirect('/report/send', 'ReportController@back');
+	Route::post('/report/send', 'ReportController@send');
+	Route::get('/report/complete', 'ReportController@complete');
+});
+
+//管理画面
+Route::prefix('admin')->namespace('Back')->as('back.')->group(function() {
+    Route::get('/shift', 'ShiftController@index')->name('shift');
+});
 
 Route::get('/test', 'testController@handle');
