@@ -16,6 +16,8 @@
 	<script src="{{ url('assets/common/js/jquery.js') }}"></script>
 	<script src="{{ url('assets/common/js/jquery.color.js') }}"></script>
 	<script src="{{ url('assets/common/js/bootstrap.min.js') }}"></script>
+	<script src="{{ url('assets/back/js/select2/select2.min.js') }}"></script>
+	<script src="{{ url('assets/back/js/select2/ja.js') }}"></script>
 	<!--自作JS -->
     @yield('js')
 </head>

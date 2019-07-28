@@ -20,15 +20,21 @@ Auth::routes();
 
 //フロント画面
 Route::namespace('Front')->as('front.')->group(function() {
-    Route::get('/report', 'ReportController@index')->name('report');
-    Route::redirect('/report/send', 'ReportController@back');
-	Route::post('/report/send', 'ReportController@send');
-	Route::get('/report/complete', 'ReportController@complete');
+	//日報
+	Route::prefix('report')->group(function() {
+	    Route::get('/', 'ReportController@index')->name('report');
+	    Route::redirect('/send', 'ReportController@back');
+		Route::post('/send', 'ReportController@send');
+		Route::get('/complete', 'ReportController@complete');
+	});
 });
 
 //管理画面
 Route::prefix('admin')->namespace('Back')->as('back.')->group(function() {
-    Route::get('/shift', 'ShiftController@index')->name('shift');
+	//シフト管理
+	Route::prefix('shift')->group(function() {
+    	Route::get('/', 'ShiftController@index')->name('shift');
+    });
 });
 
 Route::get('/test', 'testController@handle');

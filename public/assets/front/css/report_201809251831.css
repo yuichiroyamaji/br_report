@@ -76,6 +76,14 @@ input[type=checkbox] {
 	transform: scale(2);
 	margin: 0 15px;
 }
+input[type=submit] {
+	line-height: 1.2em;
+	padding: 8px;
+	background-color: #fff;
+	border-radius: 5px;
+	font-size: 1em;
+	margin-left: 20px;
+}
 label{
 	background-color: yellow;
 }

@@ -38,10 +38,12 @@ class User extends Authenticatable
         return self::where('name', '<>', 'システム管理者')->get()->pluck('name');
     }
 
+    public static function scopeGetExceptSysAdminWithId(){
+        return self::where('name', '<>', 'システム管理者')->get()->pluck('name', 'id');
+    }
+
     public static function scopeGetEmailAddress($name){
         $email = self::where('name', $name)->get()->pluck('email');
-        echo $email;
-        exit;
         return $email[0];
     }
 }

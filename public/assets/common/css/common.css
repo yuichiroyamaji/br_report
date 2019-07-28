@@ -20,14 +20,6 @@ input[type=number]{
 	font-size: 1.2em;
   	/*transform: scale(0.5);*/
 }
-input[type=submit] {
-	line-height: 1.2em;
-	padding: 8px;
-	background-color: #fff;
-	border-radius: 5px;
-	font-size: 1em;
-	margin-left: 20px;
-}
 select{
 	border :1px solid #eee;
 	font-size: 16px;
