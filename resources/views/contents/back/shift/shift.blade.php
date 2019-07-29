@@ -51,7 +51,7 @@
 						<td class="staffs form-group{{ $errors->has('category') ? ' has-error' : '' }}">
 							{!! Form::select('staffs[]', $staffs, $table[$i]['selected'], ['class' => 'form-control js-multiple', 'multiple' => 'multiple']) !!}
 						</td>
-						<td><input type="text" value="{{$table[$i]['event']}}" cols="40"></td>
+						<td><input type="text" value="{{$table[$i]['event']}}"></td>
 					</tr>			
 					@endfor
 				</table>

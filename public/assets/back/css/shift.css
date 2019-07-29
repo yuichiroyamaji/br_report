@@ -21,7 +21,8 @@ input[type=submit] {
 }
 input[type=text]{
 	height: 2.4em;
+	display: table;
 }
 .staffs{
-	width:180px;
+	display: table;
 }
