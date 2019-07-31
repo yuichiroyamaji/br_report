@@ -20,7 +20,7 @@ class ReportController extends Controller
         $option_staffs = self::optionize($staffs);
         $expense_types = Constances::EXPENSE_TYPE;
         $option_expense_types = self::optionize($expense_types);
-    	return view('contents.front.report.report')->with([
+    	return view('contents.front.report.index')->with([
             'dates' => DayService::separeteDate(Carbon::now()->subHour(16)),
             'staffs' => $option_staffs,
             'expense_types' => $option_expense_types

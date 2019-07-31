@@ -1,15 +1,16 @@
-@extends('layouts.front.common')
+@extends('layouts.common')
 @section('title', 'シフト設定')
-@section('css')
-	<link rel="stylesheet" href="./css/report_201809251831.css" />
+@section('local_css')	
+	<link rel="stylesheet" href="{{ url('assets/front/common/css/common.css') }}" />
+	<link rel="stylesheet" href="{{ url('assets/front/report/report.css') }}" />
 @endsection
-@section('js')
+@section('local_js')
     <script type="text/javascript">
     	// laravelの変数をJSに渡す
     	var staffs = @json($staffs);
     	var expense_types = @json($expense_types);
 	</script>
-    <script src="./js/report_201812272025.js"></script>
+    <script src="{{ url('assets/front/report/report.js') }}"></script>
 @endsection
 @section('content')
 	@env('production')

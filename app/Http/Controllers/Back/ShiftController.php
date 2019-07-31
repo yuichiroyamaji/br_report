@@ -24,7 +24,7 @@ class ShiftController extends Controller
         $table = Shift::getMonthShifts($today);
         // dd($month_shifts);
         // exit;
-    	return view('contents.back.shift.shift')->with([
+    	return view('contents.back.shift.index')->with([
             'dates' => $dates,
             'staffs' => User::getExceptSysAdminWithId(),
             'table' => $table
