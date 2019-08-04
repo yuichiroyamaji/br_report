@@ -14,6 +14,18 @@ class Shift extends Model
 {
     const TABLENAME = 'shifts';
     protected $table = self::TABLENAME;
+
+    protected $fillable = [
+        'date',
+        '01_staff',
+        '02_staff',
+        '03_staff',
+        '04_staff',
+        '05_staff',
+        'event',
+        'dayoff_flg',
+        'delete_flg'
+    ];
     
     public static function getMonthShifts($date){
     	//User情報をDBから取得
@@ -25,6 +37,7 @@ class Shift extends Model
     	//パラメータを設定
     	for($i=1; $i<=$last_date; $i++){
     		$day = $i == 1 ? $date->firstOfMonth() : $date->addDay();
+            $param[$i]['hidden_date'] = (string)$day->format('Y-m-d');
     		$param[$i]['date'] = (string)$day->format('m/d').'('.DayService::getDays($day->dayOfWeek).')';
     		$target_shift = $shifts->where('date', (string)$day->format('Y-m-d'));
     		if($target_shift->isNotEmpty()){
@@ -39,6 +52,36 @@ class Shift extends Model
     		$param[$i]['event'] = $target_shift->pluck('event')->first();
     	}
     	return $param;
+    }
+
+    public static function updateOrCreate($inputs){        
+        $count = count($inputs);
+        for($i=1; $i<=$count; $i++){
+            $data[$i] = [
+                'date' => $inputs[$i]['hidden_date'],
+                '01_staff' => isset($inputs[$i]['staff'][0]) ? $inputs[$i]['staff'][0] : null,
+                '02_staff' => isset($inputs[$i]['staff'][1]) ? $inputs[$i]['staff'][1] : null,
+                '03_staff' => isset($inputs[$i]['staff'][2]) ? $inputs[$i]['staff'][2] : null,
+                '04_staff' => isset($inputs[$i]['staff'][3]) ? $inputs[$i]['staff'][3] : null,
+                '05_staff' => isset($inputs[$i]['staff'][4]) ? $inputs[$i]['staff'][4] : null,
+                'event' => $inputs[$i]['event']
+            ];
+        }
+        self::insert($data);
+        // foreach($inputs as $input){
+        //     $shift = new Shift;
+        //     $shift->date = $input['hidden_date'];
+        //     $shift->"01_staff" = isset($input['staff'][0]) ? $input['staff'][0] : null;
+        //     $shift->02_staff = isset($input['staff'][1]) ? $input['staff'][1] : null;
+        //     $shift->03_staff = isset($input['staff'][2]) ? $input['staff'][2] : null;
+        //     $shift->04_staff = isset($input['staff'][3]) ? $input['staff'][3] : null;
+        //     $shift->05_staff = isset($input['staff'][4]) ? $input['staff'][4] : null;
+        //     $shift->event = $input['event'];
+        //     $shift->save();
+        // }
+        echo 'success!';
+        // dd($data);
+        exit;  
     }
 
 }

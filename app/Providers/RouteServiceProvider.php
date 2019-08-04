@@ -42,6 +42,22 @@ class RouteServiceProvider extends ServiceProvider
         //
     }
 
+    // 03AUG2019 ADDED yamaji FROM
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapAdminRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/back.php'));
+    }
+    // 03AUG2019 ADDED yamaji TO
+
     /**
      * Define the "web" routes for the application.
      *
@@ -53,9 +69,9 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
              ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+             ->group(base_path('routes/front.php'));
     }
-
+    
     /**
      * Define the "api" routes for the application.
      *

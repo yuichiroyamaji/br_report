@@ -1,9 +1,12 @@
 
 @extends('layouts.common')
+
+@inject('dayservice', 'App\Services\DayService')
+
 @section('title', 'シフト設定')
 @section('local_css')
 	<link rel="stylesheet" href="{{ url('assets/back/common/css/common.css') }}" />
-	<link rel="stylesheet" href="{{ url('assets/back/shift/shift.css') }}" />
+	<link rel="stylesheet" href="{{ url('assets/back/shift/shift2019080301.css') }}" />
 @endsection
 @section('local_js')
 	<script type="text/javascript">
@@ -15,49 +18,42 @@
 	</script>
 @endsection
 @section('content')
-	@env('production')
-	<form method="POST" action="/laravel/shift/send">
-	@else
-	<form method="POST" action="/shift/send">
-	@endenv
-	{{ csrf_field() }}
+	{{Form::open(['url' => '/admin/shift/update', 'id' => 'update'])}}{{Form::close()}}
 	<nav>
-		<input type="submit" value="シフト送信" class="float right">
+		<input type="submit" value="シフト送信" class="float right" form="update">
 		<p id="shift_title" class="float right">
 			(
-			@inject('dayservice', 'App\Services\DayService')
 			{{ $dates['year'] }} 年 
 			{{ $dates['month'] }} 月度
 			)
 		</p>
 	</nav>
-	</form>
-	@env('production')
-	<form method="POST" action="/laravel/shift/send">
-	@else
-	<form method="POST" action="/shift/send">
-	@endenv
-	<div class="container">
 	<main>
 		<section>
 			<div class="section_title">
-				{!! Form::select('year', $dayservice->years, $dates['year']) !!} 年 {!! Form::select('month[]', $dayservice->months, $dates['month'], ['class' => 'resize ', 'id' => '01_resize']) !!} 月度シフト
-				<input type="submit" value="表示切替" id="switch" class="float right">
+				{{Form::open(['url' => '/admin/shift/switch', 'id' => 'switch'])}}{{Form::close()}}
+				{!! Form::select('year', $dayservice->years, $dates['year'], ['form' => 'switch']) !!} 年 {!! Form::select('month', $dayservice->months, $dates['month'], ['class' => 'resize ', 'id' => '01_resize', 'form' => 'switch']) !!} 月度シフト
+				<input type="submit" value="表示切替" id="switch" form="switch" class="float right">
+				
 			</div>
 				<table class='table table-bordered table-responsive'>
 					<tr><th>日付</th><th>出勤</th><th>イベント</th></tr>
 					@for($i = 1; $i <= $dates['date']; $i++)
 					<tr>
-						<td>{{$table[$i]['date']}}</td>
-						<td class="staffs form-group{{ $errors->has('category') ? ' has-error' : '' }}">
-							{!! Form::select('staffs[]', $staffs, $table[$i]['selected'], ['class' => 'form-control js-multiple', 'multiple' => 'multiple']) !!}
+						<td>
+							{{$table[$i]['date']}}
+							{{ Form::hidden($i.'[date]', $table[$i]['date'], ['form' => 'update']) }}
+							{{ Form::hidden($i.'[hidden_date]', $table[$i]['hidden_date'], ['form' => 'update']) }}
 						</td>
-						<td><input type="text" value="{{$table[$i]['event']}}"></td>
+						<td class="form-group{{ $errors->has('category') ? ' has-error' : '' }}">
+							{!! Form::select($i.'[staff][]', $staffs, $table[$i]['selected'], ['class' => 'form-control js-multiple', 'multiple' => 'multiple', 'form' => 'update']) !!}
+						</td>
+						<td>{{ Form::text($i.'[event]', $table[$i]['event'], ['form' => 'update']) }}</td>
 					</tr>			
 					@endfor
 				</table>
 		</section>		
 	</main>
-	</form>
+	
 </div>
 @endsection

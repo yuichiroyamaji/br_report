@@ -21,13 +21,22 @@ class ShiftController extends Controller
     	$today = Carbon::today()->day > 20 ? Carbon::today()->addMonth()->endOfMonth() : Carbon::today()->endOfMonth();
     	// 配列化
     	$dates = DayService::separeteDate($today);
+        $staffs = User::getExceptSysAdminWithId()->toArray();
+        $staffs = array_merge([0 => '休み'], $staffs);
         $table = Shift::getMonthShifts($today);
-        // dd($month_shifts);
+    	return view('contents.back.shift.index', compact('dates', 'staffs', 'table'));
+    }
+
+    public function switch(Request $request){
+        echo 'switch';
+        dd($request);
+        exit;
+    }
+
+    public function update(Request $request){
+        // dd($request);
         // exit;
-    	return view('contents.back.shift.index')->with([
-            'dates' => $dates,
-            'staffs' => User::getExceptSysAdminWithId(),
-            'table' => $table
-        ]);
+        $input = $request->except('_token');
+        Shift::updateOrCreate($input);
     }
 }
