@@ -14,7 +14,6 @@ class testController extends Controller
 
         echo Carbon::now()->formatLocalized('%Y年%m月%d日(%a)');
         exit;
-        
     	// $date = date('d');
 	    // $test = Report::missingReport('month');
 	    // // $test = new Report;
