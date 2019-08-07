@@ -40,6 +40,7 @@ class Shift extends Model
             $param[$i]['hidden_date'] = (string)$day->format('Y-m-d');
     		$param[$i]['date'] = (string)$day->format('m/d').'('.DayService::getDays($day->dayOfWeek).')';
     		$target_shift = $shifts->where('date', (string)$day->format('Y-m-d'));
+            $param[$i]['selected'] = NULL;
     		if($target_shift->isNotEmpty()){                
 				for($h=1; $h<=5; $h++){
 					$staff_id = $target_shift->pluck(sprintf('%02d', $h).'_staff')->first();
@@ -47,33 +48,44 @@ class Shift extends Model
 					$param[$i]['selected'][] = $users->where('id', $staff_id[0])->pluck('id')->first();
 				}
     		}
-    		if(!array_has($param[$i], 'selected')){$param[$i]['selected'] = NULL;}
+    		// if(!array_has($param[$i], 'selected')){$param[$i]['selected'] = NULL;}
     		$param[$i]['event'] = $target_shift->pluck('event')->first();
     	}
     	return $param;
     }
 
-    public static function updateOrCreate($inputs){        
+    public static function updateOrCreate($inputs){
+        // dd($inputs);
         $count = count($inputs);
         for($i=1; $i<=$count; $i++){
-            if(isset($inputs[$i]['staff'][0]) && $inputs[$i]['staff'][0] == 0){
+            // echo '<br>--------------------'.$i.'_$inputs---------------------<br>';
+            // echo '<pre>';
+            // var_dump($inputs[$i]);
+            // echo '</pre>';
+            if(isset($inputs[$i]['staff'][0]) && $inputs[$i]['staff'][0] == '0'){
                 $data[$i] = [
                     'date' => $inputs[$i]['hidden_date'],
                     'dayoff_flg' => 1
                 ];
             }else{
                 $data[$i] = [
-                    'date' => $inputs[$i]['hidden_date'],                
+                    'date' => isset($inputs[$i]['hidden_date']) ? $inputs[$i]['hidden_date'] : null,
                     '01_staff' => isset($inputs[$i]['staff'][0]) ? $inputs[$i]['staff'][0] : null,
                     '02_staff' => isset($inputs[$i]['staff'][1]) ? $inputs[$i]['staff'][1] : null,
                     '03_staff' => isset($inputs[$i]['staff'][2]) ? $inputs[$i]['staff'][2] : null,
                     '04_staff' => isset($inputs[$i]['staff'][3]) ? $inputs[$i]['staff'][3] : null,
                     '05_staff' => isset($inputs[$i]['staff'][4]) ? $inputs[$i]['staff'][4] : null,                
-                    'event' => $inputs[$i]['event']
+                    'event' => isset($inputs[$i]['event']) ? $inputs[$i]['event'] : null
                 ];
             }
+            // echo '<br>--------------------'.$i.'_$data---------------------<br>';
+            // echo '<pre>';
+            // var_dump($data[$i]);
+            // echo '</pre>';
+
         }
-        self::updateOrCreate($data);
+        // exit;
+        self::insert($data);
         // foreach($inputs as $input){
         //     $shift = new Shift;
         //     $shift->date = $input['hidden_date'];
