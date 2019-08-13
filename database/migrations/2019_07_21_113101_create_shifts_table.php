@@ -23,8 +23,8 @@ class CreateShiftsTable extends Migration
             $table->string('05_staff', 20)->comment('スタッフ_05')->nullable();
             $table->string('event', 255)->comment('イベント')->nullable();
             $table->boolean('dayoff_flg')->comment('休みフラグ')->default(0);
-            $table->boolean('delete_flg')->comment('削除フラグ')->default(0);
-            $table->timestamp('deleted_at')->comment('削除日時')->nullable();
+            // deleted_atカラム追加
+            $table->softDeletes();
             // timestamps()でcreated_atとupdated_atが作成される
             $table->timestamps();
         });

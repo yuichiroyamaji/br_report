@@ -22,7 +22,6 @@ class ShiftController extends Controller
     	// 配列化
     	$dates = DayService::separeteDate($today);
         $staffs = User::getExceptSysAdminWithId()->toArray();
-        $staffs = array_merge([0 => '休み'], $staffs);
         $table = Shift::getMonthShifts($today);
     	return view('contents.back.shift.index', compact('dates', 'staffs', 'table'));
     }
@@ -33,10 +32,21 @@ class ShiftController extends Controller
         exit;
     }
 
+    public function confirm(Request $request){
+        $year = $request->year;
+        $month = $request->month;
+        $shifts_array = $request->except('_token', 'year', 'month');
+        $shift = new Shift;
+        // 休みの設定日にシフトが登録されていないか確認
+        // $shift->validateStaffInput($shifts_array);
+        // スタッフの配列を文字列に変換して確認画面へ渡す
+        $shifts = $shift->staffArrayToString($shifts_array);
+        return view('contents.back.shift.confirm', compact('year', 'month', 'shifts'));
+    }
+
     public function update(Request $request){
-        // dd($request);
-        // exit;
         $input = $request->except('_token');
-        Shift::updateOrCreate($input);
+        Shift::updateOrInsert($input);
+
     }
 }

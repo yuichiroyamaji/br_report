@@ -18,7 +18,7 @@ class User extends Authenticatable
     protected $table = 'users';
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'userid', 'name', 'email', 'password',
     ];
 
     /**
@@ -30,20 +30,23 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public static function scopeGetAllUsers(){
+    public static function scopeGetAllUsers($query){
         return DB::table('users')->get();
     }
 
-    public static function scopeGetExceptSysAdmin(){
+    public static function scopeGetName($query, $userid){
+        return self::where('userid', $userid)->get()->pluck('name')->first();
+    }
+
+    public static function scopeGetExceptSysAdmin($query){
         return self::where('name', '<>', 'システム管理者')->get()->pluck('name');
     }
 
-    public static function scopeGetExceptSysAdminWithId(){
-        return self::where('name', '<>', 'システム管理者')->get()->pluck('name', 'id');
+    public static function scopeGetExceptSysAdminWithId($query){
+        return self::where('name', '<>', 'システム管理者')->get()->pluck('name', 'userid');
     }
 
-    public static function scopeGetEmailAddress($name){
-        $email = self::where('name', $name)->get()->pluck('email');
-        return $email[0];
+    public static function scopeGetEmailAddress($query, $name){
+        return self::where('name', $name)->get()->pluck('email')->first();
     }
 }

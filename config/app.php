@@ -169,7 +169,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         //2019-07-25 Formの追加
         Collective\Html\HtmlServiceProvider::class,
-
+        //2019-08-10 DebugBarの追加
+        Barryvdh\Debugbar\ServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -234,6 +235,8 @@ return [
         //2019-07-25 Formの追加
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        //2019-08-10 DebugBarの追加
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
 

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Report;
 use Carbon\Carbon;
 use App\Services\DayService;
@@ -12,6 +13,7 @@ use DB;
 
 class Shift extends Model
 {
+    use SoftDeletes;
     const TABLENAME = 'shifts';
     protected $table = self::TABLENAME;
 
@@ -23,15 +25,14 @@ class Shift extends Model
         '04_staff',
         '05_staff',
         'event',
-        'dayoff_flg',
-        'delete_flg'
+        'dayoff_flg'
     ];
     
     public static function getMonthShifts($date){
     	//User情報をDBから取得
     	$users = User::getAllUsers();
     	//対象月のシフト情報を取得
-    	$shifts = self::whereYear('date', $date->year)->whereMonth('date', $date->month)->where('delete_flg', 0)->get();
+    	$shifts = self::whereYear('date', $date->year)->whereMonth('date', $date->month)->where('deleted_at', null)->get();
     	//対象月の最終日を設定
     	$last_date = (string)$date->day;
     	//パラメータを設定
@@ -53,41 +54,62 @@ class Shift extends Model
     	return $param;
     }
 
-    public static function updateOrCreate($inputs){        
-        $count = count($inputs);
-        for($i=1; $i<=$count; $i++){
-            if(isset($inputs[$i]['staff'][0]) && $inputs[$i]['staff'][0] == 0){
-                $data[$i] = [
-                    'date' => $inputs[$i]['hidden_date'],
-                    'dayoff_flg' => 1
-                ];
+    public function validateStaffInput($shifts){
+
+
+    }
+
+    public function staffArrayToString($shifts){
+        for($i=1; $i<=count($shifts); $i++){
+            if(isset($shifts[$i]['staff'])){
+                for($j=0; $j<=4; $j++){
+                    if(isset($shifts[$i]['staff'][$j])){
+                        // if($shifts[$i]['staff'][$j] === '0'){
+                        //     $shifts[$i]['staff'][$j] = '休み';
+                        // }else{
+                            $shifts[$i]['staff'][$j] = User::getName($shifts[$i]['staff'][$j]);
+                        // }
+                    }
+                }     
+                $shifts[$i]['str_staff'] = implode(", ", $shifts[$i]['staff']);
             }else{
-                $data[$i] = [
-                    'date' => $inputs[$i]['hidden_date'],                
-                    '01_staff' => isset($inputs[$i]['staff'][0]) ? $inputs[$i]['staff'][0] : null,
-                    '02_staff' => isset($inputs[$i]['staff'][1]) ? $inputs[$i]['staff'][1] : null,
-                    '03_staff' => isset($inputs[$i]['staff'][2]) ? $inputs[$i]['staff'][2] : null,
-                    '04_staff' => isset($inputs[$i]['staff'][3]) ? $inputs[$i]['staff'][3] : null,
-                    '05_staff' => isset($inputs[$i]['staff'][4]) ? $inputs[$i]['staff'][4] : null,                
-                    'event' => $inputs[$i]['event']
-                ];
+                $shifts[$i]['str_staff'] = '休み';
             }
         }
-        self::updateOrCreate($data);
-        // foreach($inputs as $input){
-        //     $shift = new Shift;
-        //     $shift->date = $input['hidden_date'];
-        //     $shift->"01_staff" = isset($input['staff'][0]) ? $input['staff'][0] : null;
-        //     $shift->02_staff = isset($input['staff'][1]) ? $input['staff'][1] : null;
-        //     $shift->03_staff = isset($input['staff'][2]) ? $input['staff'][2] : null;
-        //     $shift->04_staff = isset($input['staff'][3]) ? $input['staff'][3] : null;
-        //     $shift->05_staff = isset($input['staff'][4]) ? $input['staff'][4] : null;
-        //     $shift->event = $input['event'];
-        //     $shift->save();
-        // }
-        echo 'success!';
-        // dd($data);
-        exit;  
+        return $shifts;
+    }
+
+    public static function updateOrInsert($input){
+        // $count = count(array_except($input, ['date']));
+        for($i=1; $i<=count($input); $i++){
+            $data[$i]['date'] = $input[$i]['hidden_date'];
+            if(isset($input[$i]['staff'][0]) && $input[$i]['staff'][0] == 0){
+                $data[$i] += [      
+                    '01_staff' => null,
+                    '02_staff' => null,
+                    '03_staff' => null,
+                    '04_staff' => null,
+                    '05_staff' => null,
+                    'dayoff_flg' => true
+                ];
+            }else{
+                $data[$i] += [      
+                    '01_staff' => isset($input[$i]['staff'][0]) ? $input[$i]['staff'][0] : null,
+                    '02_staff' => isset($input[$i]['staff'][1]) ? $input[$i]['staff'][1] : null,
+                    '03_staff' => isset($input[$i]['staff'][2]) ? $input[$i]['staff'][2] : null,
+                    '04_staff' => isset($input[$i]['staff'][3]) ? $input[$i]['staff'][3] : null,
+                    '05_staff' => isset($input[$i]['staff'][4]) ? $input[$i]['staff'][4] : null,
+                    'dayoff_flg' => false
+                ];              
+            }
+            $data[$i]['event'] = $input[$i]['event'];
+            self::updateOrCreate(['date' => $data[$i]['date']], $data[$i]);
+        //     $data[$i]['created_at'] = Carbon::now();
+        //     $data[$i]['updated_at'] = Carbon::now();
+        }
+        // self::whereMonth('date', $input['date']['month'])->delete();
+        // self::insert($data);
+        return true;
     }
 
 }
