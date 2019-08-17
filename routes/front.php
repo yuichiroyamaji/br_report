@@ -34,9 +34,8 @@ Route::prefix('admin')->namespace('Back')->as('back.')->group(function() {
 	//シフト管理
 	Route::prefix('shift')->group(function() {
     	Route::get('/', 'ShiftController@index')->name('shift');
-    	Route::post('/switch', 'ShiftController@switch')->name('shift.switch');
     	Route::post('/confirm', 'ShiftController@confirm')->name('shift.confirm');
-    	Route::post('/update', 'ShiftController@update')->name('shift.update');
+    	Route::get('/store', 'ShiftController@store')->name('shift.store');
     });
 });
 

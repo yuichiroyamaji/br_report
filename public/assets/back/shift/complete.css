@@ -1,0 +1,35 @@
+body{
+	padding: 2%;
+}
+section{
+	background-color: #eee;
+	padding: 2%;
+}
+#title{    		
+	background-color: #999;
+	color: #fff;
+	padding: 5px;
+}
+#contents{
+	padding: 0 4%;
+}
+#message{
+	background-color: #ffbf7f;
+	color: #fff;
+	text-align: center;
+	padding: 2%;
+	border-radius: 5px;
+}
+.em{
+	font-size: 1.5em;
+}
+span{
+	font-size: 1em;
+}
+#btn-area{
+	text-align: right;
+}
+button{
+	margin-top: 5%;
+	padding: 2%;
+}

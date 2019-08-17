@@ -118,9 +118,8 @@ class ReportController extends Controller
             $msg_html .= '['.$key.'] '.$value.",";
         }
         $msg_html = explode(',', $msg_html);
-        $days = DayService::$days;
-		$week = date("w",mktime(0,0,0,$post_date['month'],$post_date['date'],$post_date['year']));
-        $dates = $post_date['year'].'年'.$post_date['month'].'月'.$post_date['date'].'日('.$days[$week].')';
+		$day = date("w",mktime(0,0,0,$post_date['month'],$post_date['date'],$post_date['year']));
+        $dates = $post_date['year'].'年'.$post_date['month'].'月'.$post_date['date'].'日('.DayService::getDays($day).')';
         $to      = Constances::OWNER_EMAIL;
         $subject = '【'.$report_type.'報告】'.$dates;
         $message = '------------------------------'."\r\n";

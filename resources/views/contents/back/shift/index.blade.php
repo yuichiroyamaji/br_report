@@ -3,36 +3,18 @@
 
 @inject('dayservice', 'App\Services\DayService')
 
-@section('title', 'シフト設定')
+@section('title', 'シフト登録')
 @section('local_css')
-	<link rel="stylesheet" href="{{ url('assets/back/common/css/common.css') }}" />
-	<link rel="stylesheet" href="{{ url('assets/back/shift/shift.css') }}" />
+	<link rel="stylesheet" href="{{ url('assets/back/shift/index.css') }}" />
 @endsection
 @section('local_js')
-	<script type="text/javascript">
-		// laravelの変数をJSに渡す
-		var staffs = @json($staffs);
-		$(document).ready(function() {
-          $(".js-multiple").select2({ width: 'resolve' });
-          // $('form[name=update]').submit(function(){if(!confirm('この内容で登録･更新します。よろしいですか？')){return false;}});
-          $(document).on('change', 'input[name=dayoff]', function(){
-          	if(state = $(this).prop("checked")){
-          		// $(this).parent().siblings().find('.select2-selection__rendered').children().remove();
-          		$(this).parent().siblings().find('.select2-selection__choice__remove').each(function(){$(this).click();});
-          		$(this).parent().siblings().find('.target').prop("disabled", true);
-          	}else{
-          		$(this).parent().siblings().find('.target').prop("disabled", false);
-          	}
-          	
-          	// alert(state);
-          });
-      	});
-	</script>
+	<script src="{{ url('assets/back/shift/index.js') }}"></script>
+	<script type="text/javascript"></script>
 @endsection
 @section('content')
-	{{Form::open(['url' => '/admin/shift/confirm', 'id' => 'update', 'name' => 'update'])}}{{Form::close()}}
+	{{ Form::open(['route' => 'back.shift.confirm', 'id' => 'store', 'name' => 'store']) }}{{Form::close()}}
 	<nav>
-		<input type="submit" value="シフト送信" class="float right" form="update">
+		<input type="submit" value="シフト送信" class="float right" form="store">
 		<p id="shift_title" class="float right">
 			(
 			{{ $dates['year'] }} 年 
@@ -41,33 +23,46 @@
 		</p>
 	</nav>
 	<main>
-		<section>
-			<div class="section_title">
-				{{Form::open(['url' => '/admin/shift/switch', 'id' => 'switch', 'name' => 'switch'])}}{{Form::close()}}
-				{!! Form::select('year', $dayservice->years, $dates['year'], ['form' => 'switch']) !!} 年 {!! Form::select('month', $dayservice->months, $dates['month'], ['class' => 'resize ', 'id' => '01_resize', 'form' => 'switch']) !!} 月度シフト
-				<input type="submit" value="表示切替" id="switch" form="switch" class="float right">
-				
-			</div>
-				<table class='table table-bordered table-responsive'>
-					{{ Form::hidden('year', $dates['year'], ['form' => 'update']) }}
-					{{ Form::hidden('month', $dates['month'], ['form' => 'update']) }}
-					<tr><th>日付</th><th>休み</th><th>出勤</th><th>イベント</th></tr>
-					@for($i = 1; $i <= $dates['date']; $i++)
-					<tr>
-						<td>
-							{{$table[$i]['date']}}
-							{{ Form::hidden($i.'[date]', $table[$i]['date'], ['form' => 'update']) }}
-							{{ Form::hidden($i.'[hidden_date]', $table[$i]['hidden_date'], ['form' => 'update']) }}
-						</td>
-						<td class='hello'>{{Form::checkbox('dayoff', null, false)}}</td>
-						<td class="form-group{{ $errors->has('category') ? ' has-error' : '' }}">
-							{!! Form::select($i.'[staff][]', $staffs, $table[$i]['selected'], ['class' => 'form-control js-multiple target', 'multiple' => 'multiple', 'form' => 'update']) !!}
-						</td>
-						<td>{{ Form::text($i.'[event]', $table[$i]['event'], ['class' => 'target', 'form' => 'update']) }}</td>
-					</tr>
-					@endfor
-				</table>
-		</section>		
+		<div id="wrapper">
+			<section>
+				<!-- エラー処理出そうと思ったけどやめた -->
+				<!-- <ul>
+	                @foreach($errors->all() as $error)
+	                    <li>{{ $error }}</li>
+	                @endforeach
+	                @if($errors->any())
+					<h4>{{$errors->first()}}</h4>
+					@endif
+	            </ul> -->
+				<div class="section_title">
+					{{Form::open(['method' => 'get', 'route' => 'back.shift', 'id' => 'switch', 'name' => 'switch'])}}{{Form::close()}}
+					{!! Form::select('year', $dayservice->years, $dates['year'], ['form' => 'switch']) !!} 年 {!! Form::select('month', $dayservice->months, $dates['month'], ['class' => 'resize ', 'id' => '01_resize', 'form' => 'switch']) !!} 月度シフト
+					<input type="submit" value="表示切替" id="switch" form="switch" class="float right">
+					
+				</div>
+					<table class='table table-bordered table-responsive'>
+						{{ Form::hidden('year', $dates['year'], ['form' => 'store']) }}
+						{{ Form::hidden('month', $dates['month'], ['form' => 'store']) }}
+						<tr><th>日付</th><th>休み</th><th>出勤</th><th>イベント</th></tr>
+						@for($i = 1; $i <= $dates['date']; $i++)
+						<tr>
+							<td>
+								{{$table[$i]['date']}}
+								{{ Form::hidden($i.'[date]', $table[$i]['date'], ['form' => 'store']) }}
+								{{ Form::hidden($i.'[hidden_date]', $table[$i]['hidden_date'], ['form' => 'store']) }}
+							</td>
+							<td class='chckbx'>{{Form::checkbox($i.'[dayoff]', 1, $table[$i]['dayoff'], ['form' => 'store', 'class' => 'dayoff', 'align' => 'center', 'valign' => 'center'])}}</td>
+							<td class="form-group {{ $errors->has('staff') ? ' has-error' : '' }}">
+								{!! Form::select($i.'[staff][]', $staffs, $table[$i]['selected'], ['class' => 'form-control js-multiple target', 'multiple' => 'multiple', 'form' => 'store']) !!}
+							</td>
+							<td class="form-group {{ $errors->has('staff') ? ' has-error' : '' }}">
+								{{ Form::text($i.'[event]', $table[$i]['event'], ['class' => 'target', 'form' => 'store', 'size' => '8']) }}
+							</td>
+						</tr>
+						@endfor
+					</table>
+			</section>
+		</div>	
 	</main>
 	
 </div>

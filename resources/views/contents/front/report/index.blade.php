@@ -1,5 +1,5 @@
 @extends('layouts.common')
-@section('title', 'シフト設定')
+@section('title', '日報')
 @section('local_css')	
 	<link rel="stylesheet" href="{{ url('assets/front/common/css/common.css') }}" />
 	<link rel="stylesheet" href="{{ url('assets/front/report/report.css') }}" />
