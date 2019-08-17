@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use DB;
 
 class User extends Authenticatable
 {
@@ -14,8 +15,10 @@ class User extends Authenticatable
      *
      * @var array
      */
+    protected $table = 'users';
+
     protected $fillable = [
-        'name', 'email', 'password',
+        'userid', 'name', 'email', 'password',
     ];
 
     /**
@@ -26,4 +29,24 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public static function scopeGetAllUsers($query){
+        return DB::table('users')->get();
+    }
+
+    public static function scopeGetName($query, $userid){
+        return self::where('userid', $userid)->get()->pluck('name')->first();
+    }
+
+    public static function scopeGetExceptSysAdmin($query){
+        return self::where('name', '<>', 'システム管理者')->get()->pluck('name');
+    }
+
+    public static function scopeGetExceptSysAdminWithId($query){
+        return self::where('name', '<>', 'システム管理者')->get()->pluck('name', 'userid');
+    }
+
+    public static function scopeGetEmailAddress($query, $name){
+        return self::where('name', $name)->get()->pluck('email')->first();
+    }
 }

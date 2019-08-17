@@ -1,23 +1,23 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>BR日報</title>
-	<!--CSS -->
-	<link rel="stylesheet" href="./css/bootstrap.min.css" />
-	<!--自作CSS -->
-	<link rel="stylesheet" href="./css/report_201809251831.css" />
-	<!--JS -->
-	<script src="./js/jquery.js"></script>
-	<script src="./js/jquery.color.js"></script>
-	<script src="./js/bootstrap.min.js"></script>
-	<!--自作JS -->
-    <script src="./js/report_201812272022.js"></script>
-</head>
-<body>
-	<form method="POST" action="/laravel/report/register">
+@extends('layouts.common')
+@section('title', '日報')
+@section('local_css')	
+	<link rel="stylesheet" href="{{ url('assets/front/common/css/common.css') }}" />
+	<link rel="stylesheet" href="{{ url('assets/front/report/report.css') }}" />
+@endsection
+@section('local_js')
+    <script type="text/javascript">
+    	// laravelの変数をJSに渡す
+    	var staffs = @json($staffs);
+    	var expense_types = @json($expense_types);
+	</script>
+    <script src="{{ url('assets/front/report/report.js') }}"></script>
+@endsection
+@section('content')
+	@env('production')
+	<form method="POST" action="/laravel/report/send">
+	@else
+	<form method="POST" action="/report/send">
+	@endenv
 	{{ csrf_field() }}
 	<nav>
 		<p id="date" class="float left">
@@ -80,18 +80,7 @@
 				<p class="no_guest"><label class="align-middle" for="no_guest_flg">ノーゲストの場合はチェック</label><input class="no_guest_flg" type="checkbox" name="no_guest_flg" value="0"></p>
 				<div class="01_staff_section">
 					<div class="md_sec_title staff"><p class="float left">スタッフ_01</p>
-						<p class="float right"><select class="select_height" name="01_staff">
-							<option>美咲</option>
-							<option>イリヤ</option>
-							<option>カナ</option>
-							<option>柘榴</option>
-							<option>カーマ</option>
-							<option>ののか</option>
-							<option>ことみ</option>
-							<option>ヒメ</option>
-							<option>弓月</option>
-							<option>ロキ</option>
-						</select></p>
+						<p class="float right"><select class="select_height" name="01_staff">@php echo $staffs; @endphp</select></p>
 					</div>
 					<p class="sm_sec_title">総給与額</p>
 						<p class="form_input">
@@ -140,9 +129,7 @@
 				<p class="no_guest"><label class="align-middle" for="no_guest_flg">経費のみの場合はチェック</label><input class="no_guest_flg" type="checkbox" name="expense_flg"></p>
 				<div class="01_expense_section">
 					<div class="md_sec_title expense"><p class="float left">経費_01</p>
-						<p class="float right"><select class="select_height" name="01_expense">
-							<option>酒屋</option><option>おしぼり</option><option>NAC</option><option>代引き</option><option>賃料</option><option>雑費</option>
-						</select></p>
+						<p class="float right"><select class="select_height" name="01_expense">@php echo $expense_types; @endphp</select></p>
 					</div>
 					<p class="sm_sec_title">支払い額</p>
 						<p class="form_input"><input type="number" name="01_expense_pay" class="money count minus expense_pay" value="">&nbsp円</p>
@@ -159,5 +146,4 @@
 	</main>
 	</form>
 </div>
-</body>
-</html>
+@endsection

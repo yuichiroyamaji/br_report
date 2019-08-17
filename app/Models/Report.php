@@ -3,9 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Report;
+use Carbon\Carbon;
+use App\Services\DayService;
+use Log;
+use DB;
 
 class Report extends Model
 {
+    protected $table = 'reports';
+
     protected $fillable = [
     	'id',
 		'date',
@@ -77,4 +84,46 @@ class Report extends Model
 		'updated_at',
 		'deleted_at'
     ];
+
+    public static function deletePastReport($date){
+    	$where = [['date', $date], ['expense_flg', '<>', 1]];
+    	if(self::where($where)->get()->isNotEmpty()){
+    		self::where($where)->update(['delete_flg' => 1, 'deleted_at' => Carbon::now()]);
+    	}
+    }
+
+    public static function scopeColumns(){
+    	return DB::table('information_schema.columns')->where('TABLE_NAME', 'reports')->get();
+    }
+
+	public static function getThisMonthRecord($year, $month){
+    	return self::whereYear('date', $year)->whereMonth('date', $month)->where('delete_flg', 0)->get();
+    }
+
+    public static function insertReport($input){
+    	self::insert($input);
+    }
+
+    public static function missingReport($from_date, $to_date){
+    	$start_date = clone $from_date;
+    	$end_date = clone $to_date;
+    	while(true){
+    		$dates[] = $start_date->format('Y-m-d');
+    		if($start_date == $end_date){break;}
+    		$start_date = $start_date->addDay();
+    	}
+    	$reported_dates = self::where([    		
+    		['date', '>=', $from_date->format('Y-m-d')],   		
+    		['date', '<=', $to_date->format('Y-m-d')],
+    		['delete_flg', 0]
+    	])->select('date')->pluck('date')->toArray();
+    	$arr_diffs = array_diff($dates, $reported_dates);
+    	$days = DayService::$days;
+    	foreach($arr_diffs as $arr_diff){
+    		$dt = Carbon::parse($arr_diff);
+    		$day = $dt->dayOfWeek;
+    		$diffs[] = $arr_diff.'('.$days[$day].')';
+    	}
+    	return $diffs;
+    }
 }

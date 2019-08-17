@@ -121,9 +121,13 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    // 'log' => env('APP_LOG', 'single'),
+    'log' => env('APP_LOG', 'daily'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
+
+    //
+    'log_max_files' => '5',  // dailyログの場合のlogファイルの保存期間
 
     /*
     |--------------------------------------------------------------------------
@@ -163,7 +167,10 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        //2019-07-25 Formの追加
+        Collective\Html\HtmlServiceProvider::class,
+        //2019-08-10 DebugBarの追加
+        Barryvdh\Debugbar\ServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -225,6 +232,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        //2019-07-25 Formの追加
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
+        //2019-08-10 DebugBarの追加
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
 

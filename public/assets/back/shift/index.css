@@ -1,0 +1,96 @@
+nav{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10000;
+    background-color: #ccc;
+    opacity: 0.8;
+    line-height: 3em;
+    padding: 5px 5px 0 5px;
+}
+main{
+	margin-top: 2em;
+}
+section{
+	background-color: #eee;
+	margin: 20px 0;
+}
+input[type=number]{
+	text-align: right;
+	font-size: 1.2em;
+  	/*transform: scale(0.5);*/
+}
+select{
+	border :1px solid #eee;
+	font-size: 16px;
+}
+.section_title{
+	background-color: #999;
+	color: #fff;
+	font-weight: bold;
+	padding: 5px;
+}
+.float{
+	width: auto;
+	margin: 0;
+}
+.left{
+	float: left;
+	font-weight: bold;
+}
+.right{
+	float: right;
+	color: #000;
+}
+.inner_section{
+	padding: 20px;
+}
+input[type=submit] {
+	line-height: 1.2em;
+	padding: 8px 16px;
+	background-color: #fff;
+	border-radius: 5px;
+	font-size: 1em;
+	margin-left: 20px;
+}
+.section_title{	
+	line-height: 3em;
+	background-color: #ffbf7f;
+    vertical-align: middle;
+}
+.section_title select{
+	height: 1.8em;
+	background-color: #fff;
+	color: #666;
+}
+#switch{
+	font-weight: normal;
+	margin-top: 2px;
+}
+input[type=text]{
+	line-height: 2em;
+	border-radius: 8%;
+	border: 1px solid #999;
+}
+.form-control{
+	width: 100%;
+	/*background-color: red;*/
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+	vertical-align: center;
+}
+#wrapper{
+	padding: 3%;
+}
+.chckbx{
+    position: relative;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+tr th{
+	background-color: #ccc;
+}
