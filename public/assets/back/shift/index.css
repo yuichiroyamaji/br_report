@@ -22,7 +22,7 @@ input[type=number]{
 }
 select{
 	border :1px solid #eee;
-	font-size: 16px;
+	font-size: 18px;
 }
 .section_title{
 	background-color: #999;
@@ -68,6 +68,7 @@ input[type=submit] {
 	margin-top: 2px;
 }
 input[type=text]{
+	font-size: 18px;
 	line-height: 2em;
 	border-radius: 8%;
 	border: 1px solid #999;
