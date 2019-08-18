@@ -36,7 +36,7 @@
 	            </ul> -->
 				<div class="section_title">
 					{{Form::open(['method' => 'get', 'route' => 'back.shift', 'id' => 'switch', 'name' => 'switch'])}}{{Form::close()}}
-					{!! Form::select('year', $dayservice->years, $dates['year'], ['form' => 'switch']) !!} 年 {!! Form::select('month', $dayservice->months, $dates['month'], ['class' => 'resize ', 'id' => '01_resize', 'form' => 'switch']) !!} 月度シフト
+					{!! Form::select('year', $dayservice->years, $dates['year'], ['form' => 'switch']) !!} 年 {!! Form::select('month', $dayservice->months, $dates['month'], ['class' => 'resize ', 'id' => '01_resize', 'form' => 'switch']) !!} 月
 					<input type="submit" value="表示切替" id="switch" form="switch" class="float right">
 					
 				</div>
@@ -56,7 +56,7 @@
 								{!! Form::select($i.'[staff][]', $staffs, $table[$i]['selected'], ['class' => 'form-control js-multiple target', 'multiple' => 'multiple', 'form' => 'store']) !!}
 							</td>
 							<td class="form-group {{ $errors->has('staff') ? ' has-error' : '' }}">
-								{{ Form::text($i.'[event]', $table[$i]['event'], ['class' => 'target', 'form' => 'store', 'size' => '8']) }}
+								{{ Form::text($i.'[event]', $table[$i]['event'], ['class' => 'target', 'form' => 'store', 'size' => '15']) }}
 							</td>
 						</tr>
 						@endfor
