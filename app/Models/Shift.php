@@ -43,9 +43,10 @@ class Shift extends Model
     		$target_shift = $shifts->where('date', (string)$day->format('Y-m-d'));
             $param[$i]['dayoff'] = $target_shift->pluck('dayoff_flg')->first();
             $param[$i]['selected'] = NULL;
-    		if($param[$i]['dayoff'] === 0 && $target_shift->isNotEmpty()){                
+    		if($param[$i]['dayoff'] == 0 && $target_shift->isNotEmpty()){  
 				for($h=1; $h<=5; $h++){
-					$staff_id = $target_shift->pluck(sprintf('%02d', $h).'_staff')->first();
+                    $col_nm = strval(sprintf('%02d', $h).'_staff');
+					$staff_id = $target_shift->pluck($col_nm)->first();
 					if(!$staff_id){break;}
 					$param[$i]['selected'][] = $users->where('userid', $staff_id)->pluck('userid')->first();
 				}
