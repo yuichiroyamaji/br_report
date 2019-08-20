@@ -56,7 +56,7 @@
 								{!! Form::select($i.'[staff][]', $staffs, $table[$i]['selected'], ['class' => 'form-control js-multiple target', 'multiple' => 'multiple', 'form' => 'store']) !!}
 							</td>
 							<td class="form-group {{ $errors->has('staff') ? ' has-error' : '' }}">
-								{{ Form::text($i.'[event]', $table[$i]['event'], ['class' => 'target', 'form' => 'store', 'size' => '15']) }}
+								{{ Form::text($i.'[event]', $table[$i]['event'], ['class' => 'target', 'form' => 'store', 'size' => '8']) }}
 							</td>
 						</tr>
 						@endfor

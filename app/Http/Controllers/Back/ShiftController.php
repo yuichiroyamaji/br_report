@@ -30,7 +30,6 @@ class ShiftController extends Controller
     	$dates = DayService::separeteDate($date);
         $staffs = User::getExceptSysAdminWithId()->toArray();
         $table = Shift::getMonthShifts($date);
-        // dd($table);
     	return view('contents.back.shift.index', compact('dates', 'staffs', 'table'));
     }
 
