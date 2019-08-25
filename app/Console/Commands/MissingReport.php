@@ -10,6 +10,7 @@ use App\Report;
 use App\User;
 use App\Services\DayService;
 use Carbon\Carbon;
+use App\Items\Constances;
 
 class MissingReport extends Command
 {
@@ -33,6 +34,7 @@ class MissingReport extends Command
      * @return void
      */
 
+    // 他のサービスをコンストラクトでインスタンス生成する例（今回は結局呼び出してない）
     protected $emailSendService;
     public function __construct(EmailSendService $email_send_service)
     {
@@ -57,7 +59,8 @@ class MissingReport extends Command
             // $users = User::getAllUsers();
             // $to = $users->where('name', 'yoshie')->pluck('email')->first();
             // $to = $users->where('name', 'yuichiro')->pluck('email')->first();
-            $to = 'Y.071081010622@icloud.com';
+            // $to = Constances::OWNER_EMAIL;
+            $to = Constances::SYSTEM_ADMIN_EMAIL;
             $days = DayService::$days;
             $day_ago = DayService::setDate('day');
             $week_ago = DayService::setDate('week');
@@ -84,10 +87,11 @@ class MissingReport extends Command
             foreach($missed_reports_month as $report){
                 $message .= $report."\r\n";
             }
-            $result = $this->emailSendService->send($to, $subject, $message);            
+            // $result = $this->emailSendService->send($to, $subject, $message);
+            $result = EmailSendService::send($to, $subject, $message);
+            if($result){Log::info('月次報告送信完了');}      
         }catch(Exception $e){
             Log::error('レポート未提出日送信エラー: '.$e);
         }
-        Log::info('レポート未提出日送信完了');
     }
 }

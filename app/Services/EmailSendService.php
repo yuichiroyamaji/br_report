@@ -25,12 +25,11 @@ class EmailSendService{
             if(isset($shift['event'])){$message .= ' 【'.$shift['event'].'】';}
             $message .= "\r\n";
         }
-        $send_mail = new EmailSendService;
-        $send_mail->send($to,$subject,$message);
+        self::send($to,$subject,$message);
         return true;
     }
 
-    public function send($to,$subject,$message){
+    public static function send($to,$subject,$message){
     	//メールの送信
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
