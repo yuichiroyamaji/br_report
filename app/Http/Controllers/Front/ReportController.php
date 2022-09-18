@@ -16,10 +16,12 @@ use App\Items\Constances;
 class ReportController extends Controller
 {
     public function index(){
+        Log::info('[START]ReportController:index()');
         $staffs = User::getExceptSysAdmin();
         $option_staffs = self::optionize($staffs);
         $expense_types = Constances::EXPENSE_TYPE;
         $option_expense_types = self::optionize($expense_types);
+        Log::info('[END]ReportController:index()');
     	return view('contents.front.report.index')->with([
             'dates' => DayService::separeteDate(Carbon::now()->subHour(16)),
             'staffs' => $option_staffs,
@@ -39,7 +41,8 @@ class ReportController extends Controller
         redirect('front.report');
     }
 
-    public function send(Request $request){  
+    public function send(Request $request){
+        Log::info('[START]ReportController:send()');
         DB::beginTransaction();
         try{
             //POSTコレクションデータの配列化
@@ -99,6 +102,7 @@ class ReportController extends Controller
             DB::rollBack();
             Log::error($e->getMessage());
         }
+        Log::info('Report Data Successfully Registered');
         //メールの送信
         $msg = '';
         $msg_html = '';
@@ -137,6 +141,9 @@ class ReportController extends Controller
         $message .= $msg."\r\n";
         $send_mail = new EmailSendService;
         $send_mail->send($to, $subject, $message);
+        Log::info('Mail Successfully Sent');
+
+        Log::info('[END]ReportController:send()');
         return redirect('/report/complete')->withInput([
                                                     'dates' => $dates,
                                                     'msg' => $msg_html
