@@ -13,9 +13,9 @@
 @endsection
 @section('content')
 	@env('production')
-	<form method="POST" action="/laravel/report/send">
+	<form method="POST" action="{{ url('/report/send') }}">
 	@else
-	<form method="POST" action="/report/send">
+	<form method="POST" action="{{ url('/report/send') }}">
 	@endenv
 	{{ csrf_field() }}
 	<nav>

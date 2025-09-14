@@ -72,7 +72,7 @@
 		@endif		
 	</section>
 	<p id="btn-area">
-		<button type="button" onclick="location.href='http://galfie.xsrv.jp/laravel/report'">報告をやり直す</button>
+		<button type="button" onclick="location.href='http://galfie.xsrv.jp/br/report'">報告をやり直す</button>
 	</p>
 </body>
 </html>

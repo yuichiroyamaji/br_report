@@ -102,7 +102,7 @@ class MonthlyReport extends Command
                 }
             }
             // $to = Constances::OWNER_EMAIL;
-            $to = Constances::SYSTEM_ADMIN_EMAIL;
+            $to = Constances::OWNER_EMAIL;
             $subject = '【月次報告】 ～'.$last['year'].'年'.$last['month'].'月';
             $message = $yearly."\r\n".$monthly."\r\n".$chart;
             // echo $message;

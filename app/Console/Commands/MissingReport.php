@@ -59,8 +59,7 @@ class MissingReport extends Command
             // $users = User::getAllUsers();
             // $to = $users->where('name', 'yoshie')->pluck('email')->first();
             // $to = $users->where('name', 'yuichiro')->pluck('email')->first();
-            // $to = Constances::OWNER_EMAIL;
-            $to = Constances::SYSTEM_ADMIN_EMAIL;
+            $to = Constances::OWNER_EMAIL;
             $days = DayService::$days;
             $day_ago = DayService::setDate('day');
             $week_ago = DayService::setDate('week');

@@ -38,7 +38,7 @@ class ReportController extends Controller
     }
 
     public function back(){
-        redirect('front.report');
+        return redirect('/br/report');
     }
 
     public function send(Request $request){
@@ -98,62 +98,74 @@ class ReportController extends Controller
                 }
             }
             DB::commit();
-        }catch(Exception $e){
+            Log::info('Report Data Successfully Registered');
+
+            // Send email and redirect
+            $msg = '';
+            $msg_html = '';
+            foreach($mail_msg as $key => $value){
+                foreach($columns as $col){
+                    if($key == $col->{'COLUMN_NAME'}){
+                        if($value != null){
+                            $msg .= '['.$col->{'COLUMN_COMMENT'}.'] '.$value."\r\n";
+                            $msg_html .= '['.$col->{'COLUMN_COMMENT'}.'] '.$value.",";
+                        }
+                        $skip = true;
+                        break;
+                    }
+                }
+                if($skip){continue;}
+                $msg .= '['.$key.'] '.$value."\r\n";
+                $msg_html .= '['.$key.'] '.$value.",";
+            }
+            $msg_html = explode(',', $msg_html);
+            $day = date("w",mktime(0,0,0,$post_date['month'],$post_date['date'],$post_date['year']));
+            $dates = $post_date['year'].'年'.$post_date['month'].'月'.$post_date['date'].'日('.DayService::getDays($day).')';
+            $to      = Constances::OWNER_EMAIL;
+            $subject = '【'.$report_type.'報告】'.$dates;
+            $message = '------------------------------'."\r\n";
+            $message .= $post_date['year'].'年'.$post_date['month'].'月度実績'."\r\n";
+            $message .= '------------------------------'."\r\n";
+            $message .= '総売上げ額： '.$total_sales.'円'."\r\n";
+            $message .= '総純利益額： '.$net_sales.'円'."\r\n";
+            $message .= '(総カード売上： '.$credit_sales.'円)'."\r\n";
+            $message .= '(総人件費： '.$total_labor_cost.'円)'."\r\n";
+            $message .= '(総経費： '.$total_expense_cost.'円)'."\r\n";
+            $message .= "\r\n";
+            $message .= '------------------------------'."\r\n";
+            $message .= $report_type.'報告内容'."\r\n";
+            $message .= '------------------------------'."\r\n";
+            $message .= $msg."\r\n";
+            $send_mail = new EmailSendService;
+            $send_mail->send($to, $subject, $message);
+            Log::info('Mail Successfully Sent');
+
+            // Store data in session directly
+            session([
+                'report_dates' => $dates,
+                'report_msg' => $msg_html
+            ]);
+
+            return redirect(url('/report/complete'));
+
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-        }
-        Log::info('Report Data Successfully Registered');
-        //メールの送信
-        $msg = '';
-        $msg_html = '';
-        foreach($mail_msg as $key => $value){
-            foreach($columns as $col){
-                if($key == $col->{'COLUMN_NAME'}){
-                    if($value != null){
-                        $msg .= '['.$col->{'COLUMN_COMMENT'}.'] '.$value."\r\n";
-                        $msg_html .= '['.$col->{'COLUMN_COMMENT'}.'] '.$value.",";
-                    }
-                    $skip = true;
-                    break;
-                }
-            }
-            if($skip){continue;}    
-            $msg .= '['.$key.'] '.$value."\r\n";
-            $msg_html .= '['.$key.'] '.$value.",";
-        }
-        $msg_html = explode(',', $msg_html);
-		$day = date("w",mktime(0,0,0,$post_date['month'],$post_date['date'],$post_date['year']));
-        $dates = $post_date['year'].'年'.$post_date['month'].'月'.$post_date['date'].'日('.DayService::getDays($day).')';
-        $to      = Constances::SYSTEM_ADMIN_EMAIL;
-        $subject = '【'.$report_type.'報告】'.$dates;
-        $message = '------------------------------'."\r\n";
-        $message .= $post_date['year'].'年'.$post_date['month'].'月度実績'."\r\n";
-        $message .= '------------------------------'."\r\n";
-        $message .= '総売上げ額： '.$total_sales.'円'."\r\n";
-        $message .= '総純利益額： '.$net_sales.'円'."\r\n";
-        $message .= '(総カード売上： '.$credit_sales.'円)'."\r\n";
-        $message .= '(総人件費： '.$total_labor_cost.'円)'."\r\n";
-        $message .= '(総経費： '.$total_expense_cost.'円)'."\r\n";
-        $message .= "\r\n";
-        $message .= '------------------------------'."\r\n";
-        $message .= $report_type.'報告内容'."\r\n";
-        $message .= '------------------------------'."\r\n";
-        $message .= $msg."\r\n";
-        $send_mail = new EmailSendService;
-        $send_mail->send($to, $subject, $message);
-        Log::info('Mail Successfully Sent');
 
-        Log::info('[END]ReportController:send()');
-        return redirect('/report/complete')->withInput([
-                                                    'dates' => $dates,
-                                                    'msg' => $msg_html
-                                                ]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An error occurred while processing your request: ' . $e->getMessage());
+        }
     }
 
     public function complete(Request $request){
+        if (!session('report_dates') || !session('report_msg')) {
+            return redirect('/br/report');
+        }
+
         return view('contents.front.report.complete')->with([
-                                                    'dates' => $request->old('dates'),
-                                                    'msg' => $request->old('msg')
-                                                ]);
+            'dates' => session('report_dates'),
+            'msg' => session('report_msg')
+        ]);
     }
 }

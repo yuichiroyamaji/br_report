@@ -29,14 +29,20 @@ class EmailSendService{
         return true;
     }
 
-    public static function send($to,$subject,$message){
+    public static function send($to,$subject,$message,$cc = null){
     	//メールの送信
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
         $headers = 'From: no-reply@br.com'."\r\n";
+        if($cc){
+            $headers .= 'Cc: '.$cc."\r\n";
+        }
         $headers .= 'Bcc: '.Constances::SYSTEM_ADMIN_EMAIL."\r\n";
         mb_send_mail($to, $subject, $message, $headers);        
         LOG::info('TO: '.$to);
+        if($cc){
+            LOG::info('CC: '.$cc);
+        }
         LOG::info('HEADER: '.$headers);
         LOG::info('SUBJECT: '.$subject);
         LOG::info('MESSAGE: '.$message);

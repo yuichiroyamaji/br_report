@@ -22,8 +22,7 @@ Auth::routes();
 Route::namespace('Front')->as('front.')->group(function() {
 	//日報
 	Route::prefix('report')->group(function() {
-	    Route::get('/', 'ReportController@index')->name('report');
-	    Route::redirect('/send', 'ReportController@back');
+	    Route::get('/', 'ReportController@index');
 		Route::post('/send', 'ReportController@send');
 		Route::get('/complete', 'ReportController@complete');
 	});
