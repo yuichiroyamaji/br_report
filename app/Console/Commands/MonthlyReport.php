@@ -73,7 +73,9 @@ class MonthlyReport extends Command
             for($i=$first['year']; $i<=$last['year']; $i++){
                 $data[$i]['total_sales'] = Report::whereYear('date', $i)->sum('total_sales');
                 $data[$i]['net_sales'] = Report::whereYear('date', $i)->sum('net_sales');
-                $data[$i]['profit_rate'] = floor($data[$i]['net_sales'] / $data[$i]['total_sales'] * 100);
+                $data[$i]['profit_rate'] = $data[$i]['total_sales'] > 0
+                    ? floor($data[$i]['net_sales'] / $data[$i]['total_sales'] * 100)
+                    : 0;
                 $yearly .= $i.'年 | ￥'.number_format($data[$i]['total_sales']).' | ￥'.number_format($data[$i]['net_sales']).' | '.$data[$i]['profit_rate'].'%'."\r\n";
                 if($first['year'] == $last['year']){
                     $start_month = $first['month'];
@@ -96,7 +98,9 @@ class MonthlyReport extends Command
                     $data[$i][$j]['total_sales'] = Report::whereYear('date', $i)->whereMonth('date', $j)->sum('total_sales');
                     $data[$i][$j]['chart'] = str_repeat('+', floor($data[$i][$j]['total_sales']) / 35000).' '.round($data[$i][$j]['total_sales']/10000, 1);
                     $data[$i][$j]['net_sales'] = Report::whereYear('date', $i)->whereMonth('date', $j)->sum('net_sales');
-                    $data[$i][$j]['profit_rate'] = floor($data[$i][$j]['net_sales'] / $data[$i][$j]['total_sales'] * 100);
+                    $data[$i][$j]['profit_rate'] = $data[$i][$j]['total_sales'] > 0
+                        ? floor($data[$i][$j]['net_sales'] / $data[$i][$j]['total_sales'] * 100)
+                        : 0;
                     $monthly .= $j_2dgt.'月 | ￥'.number_format($data[$i][$j]['total_sales']).' | ￥'.number_format($data[$i][$j]['net_sales']).' | '.$data[$i][$j]['profit_rate'].'%'."\r\n";
                     $chart .= $j_2dgt.'月 '.$data[$i][$j]['chart']."\r\n";
                 }
@@ -110,7 +114,7 @@ class MonthlyReport extends Command
             $result = EmailSendService::send($to, $subject, $message);
             DB::commit();
             if($result){Log::info('月次報告送信完了');}
-        }catch(Exception $e){
+        }catch(\Exception $e){
             DB::rollBack();
             Log::error('月次報告送信エラー: '.$e);
         }        

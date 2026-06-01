@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class DayService{
+    public static $days = ['日', '月', '火', '水', '木', '金', '土'];
+
     public $months = [
                         1 => '1', 
                         2 => '2', 
@@ -38,7 +40,7 @@ class DayService{
                     ];
 
     public static function getDays($day){
-         return ['日','月','火','水','木','金','土'][$day];
+         return self::$days[$day];
     }
 
     public static function separeteDate($today){

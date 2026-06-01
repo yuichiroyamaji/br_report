@@ -89,7 +89,7 @@ class MissingReport extends Command
             // $result = $this->emailSendService->send($to, $subject, $message);
             $result = EmailSendService::send($to, $subject, $message);
             if($result){Log::info('月次報告送信完了');}      
-        }catch(Exception $e){
+        }catch(\Exception $e){
             Log::error('レポート未提出日送信エラー: '.$e);
         }
     }
